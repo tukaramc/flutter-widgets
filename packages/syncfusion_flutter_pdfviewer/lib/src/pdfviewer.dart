@@ -960,15 +960,15 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
   /// Get the global rect of viewport region.
   Rect? _getViewportGlobalRect() {
     Rect? viewportGlobalRect;
-    if (kIsWeb && !_isMobile && _pdfContainerKey.currentContext != null) {
-      final RenderBox? viewportRenderBox =
-          // ignore: avoid_as
-          _pdfContainerKey.currentContext!.findRenderObject() as RenderBox;
-      final Offset? position = viewportRenderBox?.localToGlobal(Offset.zero);
-      final Size? containerSize = viewportRenderBox?.size;
-      viewportGlobalRect = Rect.fromLTWH(position?.dx ?? 0, position?.dy ?? 0,
-          containerSize?.width ?? 0, containerSize?.height ?? 0);
-    }
+    // if (kIsWeb && !_isMobile && _pdfContainerKey.currentContext != null) {
+    //   final RenderBox? viewportRenderBox =
+    //       // ignore: avoid_as
+    //       _pdfContainerKey.currentContext!.findRenderObject() as RenderBox;
+    //   final Offset? position = viewportRenderBox?.localToGlobal(Offset.zero);
+    //   final Size? containerSize = viewportRenderBox?.size;
+    //   viewportGlobalRect = Rect.fromLTWH(position?.dx ?? 0, position?.dy ?? 0,
+    //       containerSize?.width ?? 0, containerSize?.height ?? 0);
+    // }
     return viewportGlobalRect;
   }
 
@@ -1050,11 +1050,11 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                                 if (!_pdfPagesKey.containsKey(pageIndex)) {
                                   _pdfPagesKey[pageIndex] = GlobalKey();
                                 }
-                                if (kIsWeb &&
-                                    !_isMobile &&
-                                    _originalWidth![index] > _maxPdfPageWidth) {
-                                  _maxPdfPageWidth = _originalWidth![index];
-                                }
+                                // if (kIsWeb &&
+                                //     !_isMobile &&
+                                //     _originalWidth![index] > _maxPdfPageWidth) {
+                                //   _maxPdfPageWidth = _originalWidth![index];
+                                // }
                                 Rect? viewportGlobalRect;
                                 if (_isTextSelectionCleared) {
                                   viewportGlobalRect = _getViewportGlobalRect();
@@ -1064,12 +1064,8 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                                   _pdfImages[pageIndex],
                                   viewportGlobalRect,
                                   widget.interactionMode,
-                                  (kIsWeb && !_isMobile)
-                                      ? _originalWidth![index]
-                                      : calculatedSize.width,
-                                  (kIsWeb && !_isMobile)
-                                      ? _originalHeight![index]
-                                      : calculatedSize.height,
+                                  calculatedSize.width,
+                                  calculatedSize.height,
                                   widget.pageSpacing,
                                   _document,
                                   _pdfPages,
@@ -1087,27 +1083,27 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
                                   _isMobile,
                                   _pdfViewerController._pdfTextSearchResult,
                                 );
-                                if (kIsWeb && !_isMobile) {
-                                  _pdfPages[pageIndex] = PdfPageInfo(
-                                      totalHeight,
-                                      Size(_originalWidth![index],
-                                          _originalHeight![index]));
-                                  totalHeight += _originalHeight![index] +
-                                      widget.pageSpacing;
-                                  _updateOffsetOnOrientationChange(
-                                      _offsetBeforeOrientationChange,
-                                      pageIndex,
-                                      totalHeight);
-                                } else {
-                                  _pdfPages[pageIndex] =
-                                      PdfPageInfo(totalHeight, calculatedSize);
-                                  totalHeight += calculatedSize.height +
-                                      widget.pageSpacing;
-                                  _updateOffsetOnOrientationChange(
-                                      _offsetBeforeOrientationChange,
-                                      pageIndex,
-                                      totalHeight);
-                                }
+                                // if (kIsWeb && !_isMobile) {
+                                //   _pdfPages[pageIndex] = PdfPageInfo(
+                                //       totalHeight,
+                                //       Size(_originalWidth![index],
+                                //           _originalHeight![index]));
+                                //   totalHeight += _originalHeight![index] +
+                                //       widget.pageSpacing;
+                                //   _updateOffsetOnOrientationChange(
+                                //       _offsetBeforeOrientationChange,
+                                //       pageIndex,
+                                //       totalHeight);
+                                // } else {
+                                _pdfPages[pageIndex] =
+                                    PdfPageInfo(totalHeight, calculatedSize);
+                                totalHeight +=
+                                    calculatedSize.height + widget.pageSpacing;
+                                _updateOffsetOnOrientationChange(
+                                    _offsetBeforeOrientationChange,
+                                    pageIndex,
+                                    totalHeight);
+                                // }
                                 if (_pdfPagesKey[
                                                 _pdfViewerController.pageNumber]
                                             ?.currentState
@@ -1402,12 +1398,12 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
       _updateCurrentPageNumber();
       _isScrolled = _isLoadCallbackInvoked ? false : true;
     } else if (notification is ScrollEndNotification) {
-      if (kIsWeb && _textCollection == null && !_isMobile) {
-        _pdfPagesKey[_pdfViewerController.pageNumber]
-            ?.currentState
-            ?.focusNode
-            .requestFocus();
-      }
+      // if (kIsWeb && _textCollection == null && !_isMobile) {
+      //   _pdfPagesKey[_pdfViewerController.pageNumber]
+      //       ?.currentState
+      //       ?.focusNode
+      //       .requestFocus();
+      // }
       _pdfPagesKey[_pdfViewerController.pageNumber]
           ?.currentState
           ?.canvasRenderBox
@@ -1493,9 +1489,9 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
             bookmark.destination!.page.size.height / revealedOffset.height;
         bookmarkOffset = bookmark.destination!.location.dy;
       }
-      if (kIsWeb && !_isMobile) {
-        heightPercentage = 1.0;
-      }
+      // if (kIsWeb && !_isMobile) {
+      //   heightPercentage = 1.0;
+      // }
       final double maxScrollEndOffset =
           _scrollController.position.maxScrollExtent;
       offset = (offset + (bookmarkOffset / heightPercentage));
@@ -1678,9 +1674,8 @@ class SfPdfViewerState extends State<SfPdfViewer> with WidgetsBindingObserver {
         .bounds
         .top;
 
-    final double heightPercentage = (kIsWeb && !_isMobile)
-        ? 1
-        : (_originalHeight![currentInstancePageIndex - 1] /
+    final double heightPercentage =
+        (_originalHeight![currentInstancePageIndex - 1] /
             _pdfPages[currentInstancePageIndex]!.pageSize.height);
     final double searchOffset =
         _pdfPages[currentInstancePageIndex]!.pageOffset +
